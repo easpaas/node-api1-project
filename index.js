@@ -26,15 +26,19 @@ server.get('/api/users/', (req, res) => {
 
 // Add a new user
 server.post('/api/users/', (req, res) => {
-  let newUser = req.body;
+  if (!req.body.name || !req.body.bio) {
+    res.status(400).json({errorMessage: 'Please provide name and bio for the user.'})
+  } else {
+    // create new user 
+    let newUser = req.body;
 
-  // Assign newUser an id
-  newUser = Object.assign({id: shortid.generate()}, newUser);
+    // Assign newUser an id
+    newUser = Object.assign({id: shortid.generate()}, newUser);
 
-  // Check if status code is correct
-
-  users.push(newUser);
-  res.status(201).json(newUser);
+    users.push(newUser);
+    res.status(201).json(newUser);
+  }
+  
 })
 
 
