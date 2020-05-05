@@ -11,7 +11,7 @@ var shortid = require('shortid');
 // Global initalization of Users
 let users = [
   {
-    id: shortid.generate(), 
+    id: Math.floor(Math.random() * 200 + 1), 
     name: "Jane Doe", 
     bio: "Not Tarzan's Wife, another Jane",  
   }
@@ -33,7 +33,7 @@ server.post('/api/users/', (req, res) => {
     let newUser = req.body;
 
     // Assign newUser an id
-    newUser = Object.assign({id: shortid.generate()}, newUser);
+    newUser = Object.assign({id:  Math.floor(Math.random() * 200 + 1)}, newUser);
 
     users.push(newUser);
     res.status(201).json(newUser);
