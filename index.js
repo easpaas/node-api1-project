@@ -2,6 +2,9 @@ const express = require('express');
 const server = express();
 const port = 8080;
 
+server.use(cors());
+server.use(express.json());
+
 // required to read json from the body of a HTTP request
 server.use(express.json());
 
@@ -64,7 +67,7 @@ server.put('/api/users/:id', (req, res) => {
   if (!id || users.length == 0) {
     res.status(404).json({message: `User with id, ${id}, doesn't exist.`})
   } else if (!req.body.name || !req.body.bio || req.body.id !== id) {
-    res.status(400).json({errorMessage: 'Please provide name and bio for the user.'})
+    res.status(400).json({errorMessage: 'Please provide the correct id, name and bio.'})
   } else {
   users[userIndex] = req.body;
   res.status(200).json()
