@@ -26,6 +26,20 @@ server.get('/api/users/', (req, res) => {
     res.status(500).json({ errorMessage: 'Error connecting to database'})
 })
 
+// Return user by Id
+server.get('/api/users/:id', (req, res) => {
+  // id not found
+  const id = Number(req.params.id);
+  const foundUser = users.filter(user => user.id === id);
+
+  if (!id || foundUser.length == 0) {
+    res.status(404).json({message: `User id ${id} could not be found. Please provide a valid id.`})
+  } else {
+    res.status(200).json(foundUser);
+  }
+  res.status(500).json({errorMessage: 'The user information could not be retrieved.'});
+})
+
 // Add a new user
 server.post('/api/users/', (req, res) => {
   if (!req.body.name || !req.body.bio) {
@@ -42,19 +56,22 @@ server.post('/api/users/', (req, res) => {
   res.status(500).json({errorMessage: 'There was an error while saving the user to the databse'})
 })
 
-// Return user by Id
-server.get('/api/users/:id', (req, res) => {
-  // id not found
+// Update a user
+server.put('/api/users/:id', (req, res) => {
   const id = Number(req.params.id);
-  const foundUser = users.filter(user => user.id === id);
+  const userIndex = users.findIndex(user => user.id === id);
 
-  if (!id || foundUser.length == 0) {
-    res.status(404).json({message: `User id ${id} could not be found. Please provide a valid id.`})
+  if (!id || users.length == 0) {
+    res.status(404).json({message: `User with id, ${id}, doesn't exist.`})
+  } else if (!req.body.name || !req.body.bio || req.body.id !== id) {
+    res.status(400).json({errorMessage: 'Please provide name and bio for the user.'})
   } else {
-    res.status(200).json(foundUser);
+  users[userIndex] = req.body;
+  res.status(200).json()
   }
-  res.status(500).json({errorMessage: 'The user information could not be retrieved.'});
+  res.status(500).json({errorMessage: 'The user information could not be modified.'});
 })
+
 
 // Delete user by Id
 server.delete('/api/users/:id', (req, res) => {
@@ -66,6 +83,7 @@ server.delete('/api/users/:id', (req, res) => {
   } else {
     res.status(200).json(1);
   }
+  res.status(500).json({errorMessage: "The user could not be removed"});
 })
 
 
