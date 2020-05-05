@@ -21,15 +21,16 @@ server.get('/', (req, res) => res.send('Hello World!'));
 
 // Returns all users 
 server.get('/api/users/', (req, res) => {
-  res.status(200).json(users);
+  res.status(200) ?
+    res.status(200).json(users) :
+    res.status(500).json({ errorMessage: 'Error connecting to database'})
 })
 
 // Add a new user
 server.post('/api/users/', (req, res) => {
   if (!req.body.name || !req.body.bio) {
-    res.status(400).json({errorMessage: 'Please provide name and bio for the user.'})
+    res.status(400).json({message: 'Please provide name and bio for the user.'})
   } else {
-    // create new user 
     let newUser = req.body;
 
     // Assign newUser an id
@@ -38,13 +39,14 @@ server.post('/api/users/', (req, res) => {
     users.push(newUser);
     res.status(201).json(newUser);
   }
+  res.status(500).json({errorMessage: 'There was an error while saving the user to the databse'})
 })
 
 // Return user by Id
 server.get('/api/users/:id', (req, res) => {
   // id not found
   const id = Number(req.params.id);
-  const foundUser = users.filter(user => {user.id === id});
+  const foundUser = users.filter(user => user.id == id);
 
   if (!id) {
     res.status(404).json({message: `User id ${id} could not be found. Please provide a valid id.`})
