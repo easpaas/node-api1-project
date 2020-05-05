@@ -48,10 +48,25 @@ server.get('/api/users/:id', (req, res) => {
   const id = Number(req.params.id);
   const foundUser = users.filter(user => user.id == id);
 
-  if (!id) {
+  if (!id || foundUser.length == 0) {
     res.status(404).json({message: `User id ${id} could not be found. Please provide a valid id.`})
   } else {
     res.status(200).json(foundUser);
+  }
+  res.status(500).json({errorMessage: 'The user information could not be retrieved.'});
+})
+
+// Delete user by Id
+server.delete('/api/users/:id', (req, res) => {
+  const id = Number(req.params.id);
+  
+  if (!id) {
+    res.status(404).json({message: `User with id, ${id}, could not be found.`});
+  } else {
+    const deleteUser = users.filter(user => {
+      user.id !== id
+    });
+    res.status(204).json(id);
   }
 })
 
