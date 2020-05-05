@@ -38,9 +38,20 @@ server.post('/api/users/', (req, res) => {
     users.push(newUser);
     res.status(201).json(newUser);
   }
-  
 })
 
+// Return user by Id
+server.get('/api/users/:id', (req, res) => {
+  // id not found
+  const id = Number(req.params.id);
+  const foundUser = users.filter(user => {user.id === id});
+
+  if (!id) {
+    res.status(404).json({message: `User id ${id} could not be found. Please provide a valid id.`})
+  } else {
+    res.status(200).json(foundUser);
+  }
+})
 
 
 server.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
