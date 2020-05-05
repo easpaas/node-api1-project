@@ -46,7 +46,7 @@ server.post('/api/users/', (req, res) => {
 server.get('/api/users/:id', (req, res) => {
   // id not found
   const id = Number(req.params.id);
-  const foundUser = users.filter(user => user.id == id);
+  const foundUser = users.filter(user => user.id === id);
 
   if (!id || foundUser.length == 0) {
     res.status(404).json({message: `User id ${id} could not be found. Please provide a valid id.`})
@@ -59,14 +59,12 @@ server.get('/api/users/:id', (req, res) => {
 // Delete user by Id
 server.delete('/api/users/:id', (req, res) => {
   const id = Number(req.params.id);
+  users = users.filter(user => user.id !== id);
   
-  if (!id) {
+  if (!id || users.length == 0) {
     res.status(404).json({message: `User with id, ${id}, could not be found.`});
   } else {
-    const deleteUser = users.filter(user => {
-      user.id !== id
-    });
-    res.status(204).json(id);
+    res.status(200).json(1);
   }
 })
 
